@@ -15,7 +15,7 @@ class PetApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.lightBlue.shade200,
         hintColor: Colors.pink.shade200,
-        scaffoldBackgroundColor: Colors.blueGrey.shade50,
+        scaffoldBackgroundColor: Colors.transparent,
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.lightBlue.shade200,
           foregroundColor: Colors.black87,
@@ -45,16 +45,6 @@ class PetApp extends StatelessWidget {
           backgroundColor: Colors.purple.shade200,
           foregroundColor: Colors.white,
         ),
-        switchTheme: SwitchThemeData(
-          thumbColor: MaterialStateProperty.all(Colors.green.shade200),
-          trackColor: MaterialStateProperty.all(Colors.green.shade100),
-        ),
-        checkboxTheme: CheckboxThemeData(
-          fillColor: MaterialStateProperty.all(Colors.green.shade200),
-        ),
-        radioTheme: RadioThemeData(
-          fillColor: MaterialStateProperty.all(Colors.green.shade200),
-        ),
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -71,7 +61,6 @@ class PetApp extends StatelessWidget {
           labelStyle: TextStyle(color: Colors.blueGrey.shade600),
           hintStyle: TextStyle(color: Colors.blueGrey.shade400),
           filled: true,
-          fillColor: Colors.white.withOpacity(0.9),
         ),
         cardTheme: CardThemeData(
           color: Colors.white,
@@ -185,234 +174,263 @@ class _PerfilPetScreenState extends State<PerfilPetScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(
-          16,
-          16,
-          16,
-          MediaQuery.of(context).viewInsets.bottom + 16,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Cadastro de Perfil do Pet',
-              style: Theme.of(context).textTheme.headlineLarge,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.network(
+              'https://st4.depositphotos.com/15973376/24735/v/450/depositphotos_247352152-stock-illustration-dog-paw-seamless-pattern-vector.jpg',
+              fit: BoxFit.cover,
+              // ignore: deprecated_member_use
+              color: Colors.white.withOpacity(0.9),
+              colorBlendMode: BlendMode.lighten,
             ),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                'Preencha os dados do seu pet!',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(fontStyle: FontStyle.italic),
-              ),
+          ),
+          SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(
+              16,
+              16,
+              16,
+              MediaQuery.of(context).viewInsets.bottom + 16,
             ),
-            const SizedBox(height: 24),
-            Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    controller: nomeController,
-                    decoration: const InputDecoration(
-                      labelText: 'Nome do Pet',
-                      prefixIcon: Icon(Icons.pets),
-                    ),
-                    textInputAction: TextInputAction.next,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, informe o nome do pet.';
-                      }
-                      return null;
-                    },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Cadastro de Perfil do Pet',
+                  style: Theme.of(context).textTheme.headlineLarge,
+                ),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Preencha os dados do seu pet!',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(fontStyle: FontStyle.italic),
                   ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: racaController,
-                    decoration: const InputDecoration(
-                      labelText: 'Raça',
-                      prefixIcon: Icon(Icons.category),
-                    ),
-                    textInputAction: TextInputAction.next,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, informe a raça do pet.';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: idadeController,
-                    decoration: const InputDecoration(
-                      labelText: 'Idade (em anos)',
-                      prefixIcon: Icon(Icons.cake),
-                    ),
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, informe a idade do pet.';
-                      }
-                      final idade = int.tryParse(value);
-                      if (idade == null || idade < 0) {
-                        return 'Por favor, insira uma idade válida.';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: observacoesController,
-                    decoration: const InputDecoration(
-                      labelText: 'Observações (comportamento, saúde, etc.)',
-                      alignLabelWithHint: true,
-                      prefixIcon: Icon(Icons.notes),
-                    ),
-                    maxLines: 4,
-                    keyboardType: TextInputType.multiline,
-                    textInputAction: TextInputAction.newline,
-                  ),
-                  const SizedBox(height: 24),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Gênero',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          RadioListTile<PetGenero>(
-                            title: const Text('Macho'),
-                            value: PetGenero.macho,
-                            groupValue: _generoSelecionado,
-                            onChanged: (PetGenero? value) {
-                              setState(() {
-                                _generoSelecionado = value;
-                              });
-                            },
-                          ),
-                          RadioListTile<PetGenero>(
-                            title: const Text('Fêmea'),
-                            value: PetGenero.femea,
-                            groupValue: _generoSelecionado,
-                            onChanged: (PetGenero? value) {
-                              setState(() {
-                                _generoSelecionado = value;
-                              });
-                            },
-                          ),
-                        ],
+                ),
+                const SizedBox(height: 24),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        controller: nomeController,
+                        decoration: const InputDecoration(
+                          labelText: 'Nome do Pet',
+                          prefixIcon: Icon(Icons.pets),
+                        ),
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, informe o nome do pet.';
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Preferências de Convivência',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          CheckboxListTile(
-                            title: const Text('Gosta de crianças'),
-                            value: _gostaCriancas,
-                            onChanged: (bool? valor) {
-                              setState(() {
-                                _gostaCriancas = valor ?? false;
-                              });
-                            },
-                            controlAffinity: ListTileControlAffinity.leading,
-                          ),
-                          CheckboxListTile(
-                            title: const Text('Convive bem com outros animais'),
-                            value: _conviveOutrosAnimais,
-                            onChanged: (bool? valor) {
-                              setState(() {
-                                _conviveOutrosAnimais = valor ?? false;
-                              });
-                            },
-                            controlAffinity: ListTileControlAffinity.leading,
-                          ),
-                        ],
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: racaController,
+                        decoration: const InputDecoration(
+                          labelText: 'Raça',
+                          prefixIcon: Icon(Icons.category),
+                        ),
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, informe a raça do pet.';
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Status de Adoção',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          SwitchListTile(
-                            title: const Text('Disponível para adoção'),
-                            value: _disponivelParaAdocao,
-                            onChanged: (bool valor) {
-                              setState(() {
-                                _disponivelParaAdocao = valor;
-                              });
-                            },
-                            activeColor: Colors.green.shade200,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 16, top: 4),
-                            child: Text(
-                              _disponivelParaAdocao
-                                  ? 'Status: Disponível para adoção'
-                                  : 'Status: Indisponível para adoção',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: _disponivelParaAdocao
-                                    ? Colors.green.shade700
-                                    : Colors.red.shade700,
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: idadeController,
+                        decoration: const InputDecoration(
+                          labelText: 'Idade (em anos)',
+                          prefixIcon: Icon(Icons.cake),
+                        ),
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, informe a idade do pet.';
+                          }
+                          final idade = int.tryParse(value);
+                          if (idade == null || idade < 0) {
+                            return 'Por favor, insira uma idade válida.';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: observacoesController,
+                        decoration: const InputDecoration(
+                          labelText: 'Observações (comportamento, saúde, etc.)',
+                          alignLabelWithHint: true,
+                          prefixIcon: Icon(Icons.notes),
+                        ),
+                        maxLines: 4,
+                        keyboardType: TextInputType.multiline,
+                        textInputAction: TextInputAction.newline,
+                      ),
+                      const SizedBox(height: 24),
+
+                      // 🔥 Gênero
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Gênero',
+                                style: Theme.of(context).textTheme.titleLarge,
                               ),
+                              RadioListTile<PetGenero>(
+                                title: const Text('Macho'),
+                                value: PetGenero.macho,
+                                groupValue: _generoSelecionado,
+                                onChanged: (PetGenero? value) {
+                                  setState(() {
+                                    _generoSelecionado = value;
+                                  });
+                                },
+                              ),
+                              RadioListTile<PetGenero>(
+                                title: const Text('Fêmea'),
+                                value: PetGenero.femea,
+                                groupValue: _generoSelecionado,
+                                onChanged: (PetGenero? value) {
+                                  setState(() {
+                                    _generoSelecionado = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // 🔥 Preferências
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Preferências de Convivência',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              CheckboxListTile(
+                                title: const Text('Gosta de crianças'),
+                                value: _gostaCriancas,
+                                onChanged: (bool? valor) {
+                                  setState(() {
+                                    _gostaCriancas = valor ?? false;
+                                  });
+                                },
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                              ),
+                              CheckboxListTile(
+                                title:
+                                    const Text('Convive bem com outros animais'),
+                                value: _conviveOutrosAnimais,
+                                onChanged: (bool? valor) {
+                                  setState(() {
+                                    _conviveOutrosAnimais = valor ?? false;
+                                  });
+                                },
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // 🔥 Status de adoção
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Status de Adoção',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              SwitchListTile(
+                                title:
+                                    const Text('Disponível para adoção'),
+                                value: _disponivelParaAdocao,
+                                onChanged: (bool valor) {
+                                  setState(() {
+                                    _disponivelParaAdocao = valor;
+                                  });
+                                },
+                                activeColor: Colors.green.shade200,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 16, top: 4),
+                                child: Text(
+                                  _disponivelParaAdocao
+                                      ? 'Status: Disponível para adoção'
+                                      : 'Status: Indisponível para adoção',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: _disponivelParaAdocao
+                                        ? Colors.green.shade700
+                                        : Colors.red.shade700,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // 🔥 Botões
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              icon: const Icon(Icons.save),
+                              label: const Text('Salvar'),
+                              onPressed: _salvarDados,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              icon: const Icon(Icons.refresh),
+                              label: const Text('Limpar'),
+                              onPressed: _limparCampos,
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          icon: const Icon(Icons.save),
-                          label: const Text('Salvar'),
-                          onPressed: _salvarDados,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          icon: const Icon(Icons.refresh),
-                          label: const Text('Limpar'),
-                          onPressed: _limparCampos,
-                        ),
-                      ),
+                      const SizedBox(height: 16),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
